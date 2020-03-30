@@ -10,7 +10,7 @@ This method takes a list and return a list of tuples with all possible combinati
 
 import numpy as np
 from scipy.special import comb
-from itertools import combinations, combinations_with_replacement
+from itertools import combinations
 
 '''
 find minimum set of odd numbers to satisfy:
@@ -25,9 +25,15 @@ def find_pair(paires,n):
     return None
 
 
+def get_all_paires(curr_set):
+    mixed_paires = combinations(curr_set, 2)
+    # need to add identical paires ( 3,3   5,5 , 9,9...etc)
+    identical_paires = [(x, x) for x in curr_set]
+    return identical_paires + list(mixed_paires)
+
 # check if current set is satisfy Solaz conjecture for all even integers < N :
 def sufficient(curr_set,N):
-    all_paires = combinations_with_replacement(curr_set,2)
+    all_paires = get_all_paires(curr_set)
     for n in range(6,N+2,2):
         if find_pair(all_paires,n) == None:
             return False
@@ -67,6 +73,6 @@ if __name__ == '__main__':
     print(f'minimum set length: {minset_len} \n {list(min_set)} ')
     all_evens = range(6,N+2,2)
     for n in all_evens:
-        pair = find_pair(combinations_with_replacement(min_set,2), n)
+        pair = find_pair(get_all_paires(min_set), n)
         print(f'{n}={pair[0]}+{pair[1]}')
 
