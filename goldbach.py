@@ -37,10 +37,10 @@ def sufficient(curr_set,N):
 def find_minimum_set(N):
 
     print(f'find minimum odd set for {N}')
-    all_odds = range(3,N,2)
+    all_odds = range(1,N,2)
     # all possible combination of length r in a list form.
     for r in range(2,N):
-        rsets_count_= comb(len(range(3,N,2)),r,exact=True, repetition=True)
+        rsets_count_= comb(len(range(1,N,2)),r,exact=True, repetition=True)
         print(f'check {rsets_count_} odd sets with {r} odd numbers')
         all_rsets = combinations(all_odds, r)
         for rset in all_rsets:
