@@ -11,6 +11,8 @@ This method takes a list and return a list of tuples with all possible combinati
 import numpy as np
 from scipy.special import comb
 from itertools import combinations
+import time
+from tqdm import tqdm
 
 '''
 find minimum set of odd numbers to satisfy:
@@ -34,7 +36,7 @@ def get_all_paires(curr_set):
 # check if current set is satisfy Solaz conjecture for all even integers < N :
 def sufficient(curr_set,N):
     all_paires = get_all_paires(curr_set)
-    for n in range(6,N+2,2):
+    for n in range(2,N+2,2):
         if find_pair(all_paires,n) == None:
             return False
     return True
@@ -49,7 +51,7 @@ def find_minimum_set(N):
         rsets_count_= comb(len(range(1,N,2)),r,exact=True, repetition=True)
         print(f'check {rsets_count_} odd sets with {r} odd numbers')
         all_rsets = combinations(all_odds, r)
-        for rset in all_rsets:
+        for rset in tqdm(all_rsets,total=rsets_count_):
             if sufficient(rset,N):
                 return rset,r
 
@@ -65,14 +67,18 @@ if __name__ == '__main__':
         exit(1)
 
     N = np.int(sys.argv[1])
+    start = time.perf_counter()
     min_set,minset_len = find_minimum_set(N)
+    end = time.perf_counter()
     if min_set is None:
+        print(end - start)
         print ('minimum set not found goldbach was wrong')
         exit(0)
 
-    print(f'minimum set length: {minset_len} \n {list(min_set)} ')
-    all_evens = range(6,N+2,2)
+    all_evens = range(2,N+2,2)
     for n in all_evens:
         pair = find_pair(get_all_paires(min_set), n)
         print(f'{n}={pair[0]}+{pair[1]}')
+
+    print(f'{int(1000 * (end - start))} milisec- minimum set length: {minset_len} \n {list(min_set)} ')
 
